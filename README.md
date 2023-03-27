@@ -1,21 +1,23 @@
-This is a description of a successful JTAG resurrection attack with electromagnetic fault injection (EM-FI) on the Texas Instrument [TM4C12x microcontroller family](https://www.ti.com/microcontrollers-mcus-processors/arm-based-microcontrollers/arm-cortex-m4-mcus/overview.html).
+This is a description of a successful JTAG resurrection attack with Electromagnetic Fault Injection (EM-FI) against the Texas Instrument [TM4C12x microcontroller family](https://www.ti.com/microcontrollers-mcus-processors/arm-based-microcontrollers/arm-cortex-m4-mcus/overview.html).
 
 # The actors
 
 ## Victim: TM4C12x microcontroller
-...or better said, the TM4C12x JTAG disabling mechanism. This ARM cortex M4 based microcontroller has an embedded flash memory and a mechanism to secure JTAG access. More can be found in the [datasheet](https://www.ti.com/lit/ds/symlink/tm4c129encpdt.pdf). Depending on some parameters like flash protection, JTAG access enables an attacker to extract and debug the firmware. Therefore, JTAG is normally disabled in production devices.
-Here is how JTAG can be disabled in the TM4C12x:
-> Permanently Disabling Debug: For extremely sensitive applications, the debug interface to the processor and peripherals can be permanently disabled, blocking all accesses to the device through the JTAG or SWD interfaces.With the debug interface disabled, it is still possible to perform standard IEEE instructions (such as boundary scan operations),but access to the processor and peripherals is blocked.The DBG0 and DBG1 bits of the Boot Configuration (BOOTCFG) register control whether the debug interface is turned on or off.The debug interface should not be permanently disabled without providing some mechanism, such as the boot loader, to provide customer-installable updates or bug fixes. Disabling the debug interface is permanent and cannot be reversed.
 
-There is also a mechanism to **unlock** the device - but this has a price: in this case the flash memory is completely erased.
+... or better said, the TM4C12x JTAG Disabling Mechanism. This ARM Cortex M4 based microcontroller has an embedded flash memory and a mechanism to secure JTAG access. More can be found in the [datasheet](https://www.ti.com/lit/ds/symlink/tm4c129encpdt.pdf). Depending on some parameters such as flash protection, JTAG access enables an attacker to extract and debug the firmware. Therefore, JTAG is normally disabled on production devices.
+Here is how JTAG can be disabled on the TM4C12x:
 
-During each boot time, the BOOTCFG register is read out and JTAG protection is activated. If an attacker can induce some internal faults during this time and change some branches, JTAG may be left unprotected - so the rough idea.  
+> Permanently Disabling Debug: For extremely sensitive applications, the debug interface to the processor and peripherals can be permanently disabled, blocking all accesses to the device through the JTAG or SWD interfaces. With the debug interface disabled, it is still possible to perform standard IEEE instructions (such as boundary scan operations), but access to the processor and peripherals is blocked. The DBG0 and DBG1 bits of the Boot Configuration (BOOTCFG) register control whether the debug interface is turned on or off. The debug interface should not be permanently disabled without providing some mechanism, such as the boot loader, to provide customer-installable updates or bug fixes. Disabling the debug interface is permanent and cannot be reversed.
 
-The EK-TM4C1294XL evaluation kit featuring a TCM4C129 (left) and a TM4C123 (right) is perfect as a target (I bricked two of them):
+There is also a mechanism to **unlock** the device -- but this comes at a price: in this case the flash memory is completely erased.
+
+During each boot time, the `BOOTCFG` register is read and JTAG protection is enabled. If an attacker can induce some internal faults during this time and change some branches, JTAG may be left unprotected -- that's the rough idea.  
+
+The EK-TM4C1294XL evaluation kit featuring a TCM4C129 (left) and a TM4C123 (right) is a perfect testing target (I bricked two of them):
 ![Board](./pictures/ek-tm4c1294xl_tm4c1294_connected_launchpad_top_view.jpg)
 
-
 ## Attacker: Electromagnetic Fault Injection
+
 Roughly said, by generating a transient magnetic field near the device, some current is induced in the internal device wires and **may** produce some interesting faults. This picture explains the coupling mechanism:
 
 ![emfi](./pictures/emfi.png)
@@ -75,6 +77,6 @@ And this is what happens when JTAG is resurrected:
 ![jtag](./pictures/jtag.png)
 
 
-#  Disclosure
+#  Responsible Disclosure
 
 I disclosed my finding to Texas Instrument last year. They answered with [this document](https://www.ti.com/lit/ml/swra739/swra739.pdf). For the TM4C12x, there is no claim to be secure against such attacks.
