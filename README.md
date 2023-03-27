@@ -1,4 +1,4 @@
-This is a description of a successful JTAG resurrection attack with electromagnetic fault injection (EM-FI) on the Texas Instrument [TM4C12x microcontroller family](https://www.ti.com/microcontrollers-mcus-processors/arm-based-microcontrollers/arm-cortex-m4-mcus/overview.html).
+This is a description of a successful JTAG resurrection attack with electromagnetic fault injection (yet another EM-FI!) on the Texas Instrument [TM4C12x microcontroller family](https://www.ti.com/microcontrollers-mcus-processors/arm-based-microcontrollers/arm-cortex-m4-mcus/overview.html).
 
 # The actors
 
